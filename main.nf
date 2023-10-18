@@ -99,7 +99,7 @@ process FASTQC {
 }
 
 process PREP_FOR_CLUST {
-
+    
     input:
     tuple val(meta), path(reads)
     output:
@@ -113,6 +113,8 @@ process PREP_FOR_CLUST {
 }
 
 process CLUSTERING {
+
+    cpus params.clusteringcpus
 
     input:
     path(reads)
