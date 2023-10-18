@@ -128,7 +128,7 @@ process CLUSTERING {
         --sizein \
         --consout consensus.fasta \
         --otutabout otutab.txt \
-        --threads 6 \
+        --threads ${params.clusteringcpus} \
         --id 0.97 \
         --iddef 0
 
