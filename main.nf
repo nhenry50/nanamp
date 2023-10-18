@@ -162,6 +162,8 @@ process GET_REF {
 
 process ASSIGN_IDTAXA {
 
+    memory { 10.GB * task.cpus }
+
     input:
     path(fasta_seq)
     path(refdb)
