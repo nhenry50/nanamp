@@ -119,8 +119,8 @@ process CLUSTERING {
     input:
     path(reads)
     output:
-    path("otutab.txt"), emit: otutab
-    path("consensus.fasta"), emit: otuseq
+    path("otutab_filtered.txt"), emit: otutab
+    path("consensus_filtered.fasta"), emit: otuseq
 
     """
     cat ${reads} > concat_reads.fasta.gz
@@ -133,6 +133,14 @@ process CLUSTERING {
         --threads ${params.clusteringcpus} \
         --id 0.97 \
         --iddef 0
+
+    awk -v RS="\n>" -v FS="\n" '
+        NR == 1 {sub(/^>/,"")}
+        \$1 !~ /;seqs=1\$/ {print ">"\$0 > "consensus_filtered.fasta"}
+        \$1 ~ /;seqs=1\$/ {gsub(/centroid=|;.+\$/,"",\$1); print \$1 > "pattern.txt"}
+        ' consensus.fasta
+    
+    grep --file=pattern.txt --invert-match otutab.txt > otutab_filtered.txt
 
     rm concat_reads.fasta.gz
 
