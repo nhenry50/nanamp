@@ -33,7 +33,7 @@ process quality_filtering {
 
     """
     vsearch --fastq_filter ${reads} \
-        --fastq_maxee_rate 0.2 \
+        --fastq_maxee_rate ${params.maxee_rate} \
         --fastq_qmax 90 \
         --fastq_minlen ${params.min_length} \
         --fastq_maxlen ${params.max_length} \
@@ -131,8 +131,8 @@ process CLUSTERING {
         --consout consensus.fasta \
         --otutabout otutab.txt \
         --threads ${params.clusteringcpus} \
-        --id 0.97 \
-        --iddef 0
+        --id ${params.clusteringid} \
+        --iddef ${params.clusteringiddef}
 
     awk -v RS="\n>" -v FS="\n" '
         NR == 1 {sub(/^>/,"")}
@@ -201,7 +201,7 @@ process ASSIGN_IDTAXA {
         sequences,
         trainingSet,
         strand = "top",
-        threshold = 50,
+        threshold = ${params.idtaxa_thresh},
         minDescend = 0.9,
         processors = 1
     )
