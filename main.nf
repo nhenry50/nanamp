@@ -137,10 +137,10 @@ process GET_REF {
 
     label 'process_low'
 
-    conda "r::r-tidyverse=1.2.1"
+    conda "bioconda::bioconductor-decipher=2.28.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-tidyverse:1.2.1' :
-        'biocontainers/r-tidyverse:1.2.1' }"
+        'https://depot.galaxyproject.org/singularity/bioconductor-decipher:2.28.0--r43ha9d7317_0' :
+        'biocontainers/bioconductor-decipher:2.28.0--r43ha9d7317_0' }"
 
     output:
     path("refdb.rds")
@@ -254,10 +254,10 @@ process ASSIGN_IDTAXA {
 
 process FINAL_TABLE {
 
-    conda "r::r-tidyverse=1.2.1"
+    conda "bioconda::bioconductor-decipher=2.28.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-tidyverse:1.2.1' :
-        'biocontainers/r-tidyverse:1.2.1' }"
+        'https://depot.galaxyproject.org/singularity/bioconductor-decipher:2.28.0--r43ha9d7317_0' :
+        'biocontainers/bioconductor-decipher:2.28.0--r43ha9d7317_0' }"
 
     input:
     path(otutab)
@@ -269,15 +269,18 @@ process FINAL_TABLE {
     """
     #!/usr/bin/env Rscript
 
-    library(tidyverse)
-
     otutab <- read.delim("${otutab}")
     names(otutab)[1] <- "sequence"
 
     taxonomy <- read.delim("${taxonomy}")
 
-    right_join(taxonomy, otutab) %>%
-        write_tsv("final_table_${params.refdb}.tsv")
+    write.table(
+        merge(taxonomy, otutab, all.x = TRUE, by = sequence),
+        file = "final_table_${params.refdb}.tsv",
+        quote = FALSE,
+        sep = "\t",
+        row.names = FALSE
+    )
     """
 
 }
