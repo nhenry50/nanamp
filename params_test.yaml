@@ -1,0 +1,21 @@
+    manifest: "assets/test_manifest.tab"
+
+    outdir: "outputs"
+
+    primer_f: "AGAGTTTGATCMTGGCTCAG"
+    primer_r: "AAGTCGTAACAAGGTAACC"
+    min_length: 1400
+    max_length: 1800
+    maxee_rate: 0.02
+    cutadapt_error: 0.2
+    clusteringid: 0.99
+    clusteringiddef: 0
+
+    refdb: "pr2"
+
+    fastachunks: 200
+
+    idtaxa_thresh: 50
+
+    max_memory: '12.GB'
+    max_cpus: 4
